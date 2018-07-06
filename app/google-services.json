@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "466675323966",
+    "firebase_url": "https://education-3464c.firebaseio.com",
+    "project_id": "education-3464c",
+    "storage_bucket": "education-3464c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466675323966:android:b80984b0c75bc76f",
+        "android_client_info": {
+          "package_name": "com.example.hp.eu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466675323966-24jiup79deqk62dsm6ejhhmo4u83hme3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hp.eu",
+            "certificate_hash": "fe04c24a3bb8ef239a4db1b2842929bc83cbbae3"
+          }
+        },
+        {
+          "client_id": "466675323966-j634cvbmak59cm3gcepkedcr0b45ktuk.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "466675323966-j634cvbmak59cm3gcepkedcr0b45ktuk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACPGmEzaEH0ynCzQhkO8LqjW-tITVMrF0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466675323966-j634cvbmak59cm3gcepkedcr0b45ktuk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

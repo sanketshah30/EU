@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/border">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:paddingTop="15dp">
+
+        <LinearLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.example.hp.eu.custom.TextViewUbuntuRegular
+                    android:id="@+id/tv_name_provider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name of Provider"
+                    android:textColor="@android:color/black" />
+
+                <com.example.hp.eu.custom.TextViewUbuntuRegular
+                    android:id="@+id/tv_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_name_provider"
+                    android:text="Status"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <com.example.hp.eu.custom.TextViewUbuntuRegular
+                android:id="@+id/tv_view_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/layout_title"
+                android:layout_weight="0"
+                android:text="View More" />
+        </LinearLayout>
+
+        <com.example.hp.eu.custom.TextViewUbuntuRegular
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_top"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:text="Cancel Request" />
+
+        <com.example.hp.eu.custom.TextViewUbuntuRegular
+            android:id="@+id/tv_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_cancel"
+            android:layout_marginTop="10dp"
+            android:text="1. Book Name, Subject, Standard, Board
+2. Book Name, Subject, Standard, Board
+3.Book Name, Subject, Standard, Board
+"
+            android:textColor="@android:color/black"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

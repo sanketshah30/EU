@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ProviderHomeActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FF5722"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+<!--
+            <com.example.hp.eu.custom.CircularImageView
+                android:id="@+id/action_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/ic_search_black_24dp"
+                android:backgroundTint="@color/themeColor" />-->
+
+            <com.example.hp.eu.custom.CircularImageView
+                android:id="@+id/action_provider_logout"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_exit_to_app_black_24dp"
+                android:backgroundTint="@color/themeColor" />
+
+            <SearchView
+                android:id="@+id/action_provider_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/frame_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/provider_navigation"
+        android:layout_below="@id/toolbar" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/provider_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/themeColor"
+        app:itemIconTint="@drawable/text"
+        app:itemTextColor="@drawable/text"
+        app:menu="@menu/provider_navigation" />
+
+</RelativeLayout>
