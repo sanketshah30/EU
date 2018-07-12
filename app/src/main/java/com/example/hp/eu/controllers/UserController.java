@@ -19,16 +19,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.hp.eu.common.Constants.COLUMN_ADDRESS;
-import static com.example.hp.eu.common.Constants.COLUMN_CITY;
-import static com.example.hp.eu.common.Constants.COLUMN_ID;
-import static com.example.hp.eu.common.Constants.COLUMN_INCOME;
-import static com.example.hp.eu.common.Constants.COLUMN_IS_ACTIVE;
-import static com.example.hp.eu.common.Constants.COLUMN_IS_DELETE;
-import static com.example.hp.eu.common.Constants.COLUMN_USER_ID;
-import static com.example.hp.eu.common.Constants.COLUMN_USER_PROFILE_IMAGE;
-import static com.example.hp.eu.common.Constants.COLUMN_USER_TYPE;
-import static com.example.hp.eu.common.Constants.CONTENT_USER;
+import static com.example.hp.eu.common.Constants.*;
 
 public class UserController {
     public static void insertUser(Context context, String id, String user_id, String user_type, String user_profile_image, String address,
@@ -52,7 +43,7 @@ public class UserController {
         }
     }
 
-    public static void loginApiCall(final Activity context, final String phone_Number, final String password, final CallBackResult callBackResult) {
+    public static void loginApiCall(final Activity context, final String mobile_number, final CallBackResult callBackResult) {
         //  final String token  =  FirebaseInstanceId.getInstance().getToken();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -87,8 +78,7 @@ public class UserController {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.fcf_Preference), Context.MODE_PRIVATE);
-                params.put("phone_number", phone_Number);
-                params.put("password", password);
+                params.put("mobile_number", mobile_number);
                 params.put("fcm_id",  MyApplication.setting.getString("UUID", ""));
 
                 Log.e("paramsssslloign", "===" + params.toString());
