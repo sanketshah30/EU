@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements SwipeRefreshLayo
         verify = findViewById(R.id.verify_textview);
         cbremember = findViewById(R.id.cbremember_me);
         auth = FirebaseAuth.getInstance();
-        tv_register = findViewById(R.id.register_textview);
+//        tv_register = findViewById(R.id.register_textview);
         icon_lock = findViewById(R.id.icon_lock);
         layout_noInternetLayout = findViewById(R.id.layout_no_internet);
 
@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements SwipeRefreshLayo
                 }
             };
 
+/*
             tv_register.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements SwipeRefreshLayo
                     startActivity(intent_register);
                 }
             });
+*/
             cbremember.setOnClickListener(new View.OnClickListener() {
 
                 @Override

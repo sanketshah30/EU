@@ -79,6 +79,7 @@ public class Constants {
     public static final String PATH_MASTER_SUBJECT = "PATH_MASTER_SUBJECT";
     public static final String PATH_LOG = "PATH_LOG";
 
+
     public static final Uri CONTENT_USER_PROFILE = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_USER_PROFILE);
     public static final Uri CONTENT_USER = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_USER);
     public static final Uri CONTENT_KID = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_KID);
@@ -89,5 +90,14 @@ public class Constants {
     public static final Uri CONTENT_MASTER_STANDARD = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_MASTER_STANDARD);
     public static final Uri CONTENT_MASTER_SUBJECT = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_MASTER_SUBJECT);
     public static final Uri CONTENT_LOG = Uri.parse(CONETNT_PROTOCOL + AUTHORITY + "/" + PATH_LOG);
+
+    public static final String URL = "http://eu.webxyz.in/";
+    public static final String URL_GET_LOGIN_DATA = URL + "checklogin";
+    public static final String URL_NEW_USER_DATA = URL + "newuser";
+    public static final String URL_KID = URL + "kid";
+    public static final String URL_FILTER = URL + "filter";
+    public static final String URL_REQUEST_FILTER = URL + "request_filter";
+    public static final String URL_UPDATE_PROFILE = URL + "update_profile";
+    public static final String URL_APPROVAL_PAGE = URL + "approval_page";
 
 }

@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -286,78 +288,85 @@ public class ProfileActivity extends AppCompatActivity {
     public void addToDatabase() {
 //        //checking if file is available
 
-        //displaying progress dialog while image is uploading
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Submitting");
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+
+            //displaying progress dialog while image is uploading
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Submitting");
 
 
-        //getting the storage reference
-        if (filePath != null) {
-            StorageReference sRef = mStorageRef.child(DBHelperModel.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + "." + getFileExtension(filePath));
-            progressDialog.show();
-        //adding the file to reference
-        sRef.putFile(filePath)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //dismissing the progress dialog
-                        progressDialog.dismiss();
+            //getting the storage reference
+            if (filePath != null) {
+                StorageReference sRef = mStorageRef.child(DBHelperModel.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + "." + getFileExtension(filePath));
+                progressDialog.show();
+                //adding the file to reference
+                sRef.putFile(filePath)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                //dismissing the progress dialog
+                                progressDialog.dismiss();
 
-                        //displaying success toast
-                        Toast.makeText(getApplicationContext(), "Success! ", Toast.LENGTH_LONG).show();
-
-
-                        if (is_Type == "Receiver") {
+                                //displaying success toast
+                                Toast.makeText(getApplicationContext(), "Success! ", Toast.LENGTH_LONG).show();
 
 
-                            UserProfileController insertData = new UserProfileController();
-                            insertData.insertUserProfile(ProfileActivity.this, "1", "1", gender + " " + et_fname.getText().toString(), et_lname.getText().toString(),
-                                    et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
-
-                            UserController insertData1 = new UserController();
-                            insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
-                                    , city, et_income.getText().toString(), "1", "1");
-                            Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsReceiverActivity.class);
-                            intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
-                            intent_Kid_Provider.putExtra("USER_TYPE", is_Type);
-                            startActivity(intent_Kid_Provider);
+                                if (is_Type == "Receiver") {
 
 
-                        } else if (is_Type == "Provider") {
-                            UserProfileController insertData = new UserProfileController();
-                            insertData.insertUserProfile(ProfileActivity.this, "1", "1", gender + " " + et_fname.getText().toString(), et_lname.getText().toString(),
-                                    et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
+                                    UserProfileController insertData = new UserProfileController();
+                                    insertData.insertUserProfile(ProfileActivity.this, "1", "1", gender + " " + et_fname.getText().toString(), et_lname.getText().toString(),
+                                            et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
 
-                            UserController insertData1 = new UserController();
-                            insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
-                                    , city, et_income.getText().toString(), "1", "1");
+                                    UserController insertData1 = new UserController();
+                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
+                                            , city, et_income.getText().toString(), "1", "1");
+                                    Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsReceiverActivity.class);
+                                    intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
+                                    intent_Kid_Provider.putExtra("USER_TYPE", is_Type);
+                                    startActivity(intent_Kid_Provider);
 
-                            Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsProviderActivity.class);
-                            intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
-                            intent_Kid_Provider.putExtra("USER_TYPE", is_Type);
-                            startActivity(intent_Kid_Provider);
 
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        //displaying the upload progress
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        progressDialog.setMessage("Uploading " + ((int) progress) + "%...");
-                    }
-                });
-        } else {
-            progressDialog.dismiss();
+                                } else if (is_Type == "Provider") {
+                                    UserProfileController insertData = new UserProfileController();
+                                    insertData.insertUserProfile(ProfileActivity.this, "1", "1", gender + " " + et_fname.getText().toString(), et_lname.getText().toString(),
+                                            et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
+
+                                    UserController insertData1 = new UserController();
+                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
+                                            , city, et_income.getText().toString(), "1", "1");
+
+                                    Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsProviderActivity.class);
+                                    intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
+                                    intent_Kid_Provider.putExtra("USER_TYPE", is_Type);
+                                    startActivity(intent_Kid_Provider);
+
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                //displaying the upload progress
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                progressDialog.setMessage("Uploading " + ((int) progress) + "%...");
+                            }
+                        });
+            } else {
+                progressDialog.dismiss();
+            }
+        }    else{
+            Toast.makeText(this, "Connect the Internet and Try again", Toast.LENGTH_LONG).show();
         }
-    }
 
+    }
 }

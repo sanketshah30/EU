@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@android:color/darker_gray"
     tools:context=".activities.ReceiverHomeActivity">
 
     <android.support.v7.widget.Toolbar

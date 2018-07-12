@@ -23,7 +23,7 @@ public class KidDetailsReceiverActivity extends AppCompatActivity {
     private TextView tv_SubmitandAddKid, tv_Submit, tv_Upload, tvFileName;
     private EditText et_child, et_childfees;
     private Spinner spinner_School, spinner_Board, spinner_Standard;
-    private String  uriString;
+    private String uriString;
     private Uri uri;
 
     @Override
@@ -64,7 +64,7 @@ public class KidDetailsReceiverActivity extends AppCompatActivity {
                         spinner_Board.getSelectedItem().toString().trim(), spinner_Standard.getSelectedItem().toString().trim(), et_childfees.getText().toString(), uriString, "1", "0");
                 et_child.setText("");
                 et_childfees.setText("");
-                uri=null;
+                uri = null;
                 tvFileName.setText("");
 
             }
