@@ -2,6 +2,7 @@ package com.example.hp.eu.activities;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,12 +30,9 @@ import com.example.hp.eu.controllers.UserProfileController;
 import com.example.hp.eu.model.DBHelperModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -102,14 +99,13 @@ public class ProfileActivity extends AppCompatActivity {
         image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
 
-        getData();
+//        getData();
 
         rb_receive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +133,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
-
+/*
     private void getData() {
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
         Query query = reference1.child("Users").orderByChild("address").equalTo("505");
@@ -156,7 +152,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
     private void verification() {
         MyUtils myUtils = new MyUtils();
@@ -170,17 +166,17 @@ public class ProfileActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(et_fname.getText().toString().trim())) {
             is_Valid = false;
-            et_fname.setError("Please Enter Name");
+            et_fname.setError("Please Enter First Name");
         } else if (TextUtils.isEmpty(et_lname.getText().toString().trim())) {
             is_Valid = false;
-            et_lname.setError("Please Enter Phone Number");
-        } else if (TextUtils.isEmpty(et_phoneNumber.getText().toString().trim())) {
+            et_lname.setError("Please Enter Last Name");
+        } /*else if (TextUtils.isEmpty(et_phoneNumber.getText().toString().trim())) {
             is_Valid = false;
             et_phoneNumber.setError("Please Enter Phone Number");
         } else if (et_phoneNumber.getText().toString().trim().length() < 10) {
             is_Valid = false;
             et_phoneNumber.setError("Please Enter Valid Phone Number");
-        } else if (TextUtils.isEmpty(et_Email.getText().toString().trim())) {
+        } */else if (TextUtils.isEmpty(et_Email.getText().toString().trim())) {
             is_Valid = false;
             et_Email.setError("Please Enter Email");
         } else if (!myUtils.emailValidator(et_Email.getText().toString().trim())) {
@@ -201,14 +197,12 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(city)) {
             is_Valid = false;
             Toast.makeText(this, "Please Select Your City", Toast.LENGTH_LONG).show();
-        }/*else if ( city="Select City"){
+        }else if (city.matches("Select City")){
             is_Valid=false;
             Toast.makeText(this, "Please Select Your City", Toast.LENGTH_LONG).show();
-        }*/ else if (TextUtils.isEmpty(is_Type)) {
+        } else if (TextUtils.isEmpty(is_Type)) {
             is_Valid = false;
-            Toast.makeText(this, "Please Select An Option", Toast.LENGTH_LONG).show();
-        } else if (filePath == null) {
-            Toast.makeText(this, "Please Enter image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Select User Type", Toast.LENGTH_LONG).show();
         } else if (checkIncome) {
 
             if (TextUtils.isEmpty(et_income.getText().toString().trim())) {
@@ -220,6 +214,8 @@ public class ProfileActivity extends AppCompatActivity {
                     et_income.setError("Please Enter your total Income");
                 }
             }
+        } else if (filePath == null) {
+            Toast.makeText(this, "Please Enter image", Toast.LENGTH_SHORT).show();
         } else {
 
             is_Valid = true;
@@ -281,26 +277,24 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
+        Context context= getApplicationContext();
+        ContentResolver cR = context.getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     public void addToDatabase() {
 //        //checking if file is available
-/*        Bitmap image = BitmapFactory.decodeResource(getResources(),
-                R.id.imageview_profile);
-       final String image_db= image.toString();*/
 
         //displaying progress dialog while image is uploading
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Submitting");
-        progressDialog.show();
+
 
         //getting the storage reference
-        StorageReference sRef = mStorageRef.child(DBHelperModel.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + "." + getFileExtension(filePath));
         if (filePath != null) {
-
+            StorageReference sRef = mStorageRef.child(DBHelperModel.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + "." + getFileExtension(filePath));
+            progressDialog.show();
         //adding the file to reference
         sRef.putFile(filePath)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -362,7 +356,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
         } else {
-            image_profile.setImageResource(R.drawable.background);
+            progressDialog.dismiss();
         }
     }
 

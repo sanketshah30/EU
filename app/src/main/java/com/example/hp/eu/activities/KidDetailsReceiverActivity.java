@@ -23,7 +23,7 @@ public class KidDetailsReceiverActivity extends AppCompatActivity {
     private TextView tv_SubmitandAddKid, tv_Submit, tv_Upload, tvFileName;
     private EditText et_child, et_childfees;
     private Spinner spinner_School, spinner_Board, spinner_Standard;
-    private String selectedFilePath, uriString;
+    private String  uriString;
     private Uri uri;
 
     @Override

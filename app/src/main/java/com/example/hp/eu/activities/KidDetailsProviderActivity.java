@@ -72,8 +72,8 @@ public class KidDetailsProviderActivity extends AppCompatActivity {
                 masterBoardController.insertBoard(KidDetailsProviderActivity.this, "2", spinner_Board.getSelectedItem().toString().trim(), "0", "1");
 
                 et_child.setText("");
-                et_Description.setText("");
-
+                /*et_Description.setText("");
+*/
             }
         });
 
