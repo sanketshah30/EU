@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     //Uri to store file
     private Uri filePath;
     private Toolbar myToolbar;
-    String image;
+
     //Firebase objects
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
@@ -178,7 +178,9 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(is_Type)) {
             is_Valid = false;
             Toast.makeText(this, "Please Select User Type", Toast.LENGTH_LONG).show();
-        } else if (checkIncome) {
+        } else if (filePath == null) {
+            Toast.makeText(this, "Please Enter image", Toast.LENGTH_SHORT).show();
+        }        else if (checkIncome) {
 
             if (TextUtils.isEmpty(et_income.getText().toString().trim())) {
                 is_Valid = false;
@@ -189,8 +191,6 @@ public class ProfileActivity extends AppCompatActivity {
                     et_income.setError("Please Enter your total Income");
                 }
             }
-        } else if (filePath == null) {
-            Toast.makeText(this, "Please Enter image", Toast.LENGTH_SHORT).show();
         } else {
 
             is_Valid = true;
@@ -238,19 +238,6 @@ public class ProfileActivity extends AppCompatActivity {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 image_profile.setImageBitmap(bitmap);
-                image = filePath.getPath();
-                /*
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                Context context = getApplicationContext();
-                String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Profile Image", null);
-                image = path;
-*/
-
-/*                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-                byte[] bArray = bos.toByteArray();
-                image = bArray.toString();*/
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -258,20 +245,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-  /*  public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
 
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
-*/
 
     public String getFileExtension(Uri uri) {
         Context context = getApplicationContext();
@@ -316,7 +290,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
 
                                     UserController insertData1 = new UserController();
-                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
+                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, filePath.toString(), et_address.getText().toString()
                                             , city, et_income.getText().toString(), "1", "1");
                                     Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsReceiverActivity.class);
                                     intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
@@ -330,7 +304,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
 
                                     UserController insertData1 = new UserController();
-                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, image, et_address.getText().toString()
+                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, filePath.toString(), et_address.getText().toString()
                                             , city, et_income.getText().toString(), "1", "1");
 
                                     Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsProviderActivity.class);
