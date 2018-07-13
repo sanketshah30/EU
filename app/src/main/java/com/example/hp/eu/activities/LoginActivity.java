@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hp.eu.R;
+import com.example.hp.eu.common.CallBackResult;
+import com.example.hp.eu.controllers.UserController;
+import com.example.hp.eu.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -26,6 +29,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -158,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements SwipeRefreshLayo
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "User signed in successfully", Toast.LENGTH_SHORT).show();
+
                             Intent profile = new Intent(LoginActivity.this, ProfileActivity.class);
                             profile.putExtra("phone_Number", et_PhoneNumber.getText().toString());
                             startActivity(profile);
@@ -183,5 +188,20 @@ public class LoginActivity extends AppCompatActivity implements SwipeRefreshLayo
     public void verifyPhoneNumber(String verification_code, String input_code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification_code, input_code);
         signInWithPhone(credential);
+    }
+
+    private void loginAPICall( String phone_number){
+        UserController.loginApiCall(LoginActivity.this, phone_number, new CallBackResult() {
+            @Override
+            public void onSuccess(Object result) {
+                UserModel userModel= (UserModel) (result);
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 }

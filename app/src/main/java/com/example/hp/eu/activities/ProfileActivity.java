@@ -32,7 +32,6 @@ import com.example.hp.eu.controllers.UserProfileController;
 import com.example.hp.eu.model.DBHelperModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,7 +39,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -103,6 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
@@ -135,26 +134,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
-/*
-    private void getData() {
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
-        Query query = reference1.child("Users").orderByChild("address").equalTo("505");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        Log.e("dataSnapshot", "==" + dataSnapshot.getValue());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
 
     private void verification() {
         MyUtils myUtils = new MyUtils();
@@ -172,13 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(et_lname.getText().toString().trim())) {
             is_Valid = false;
             et_lname.setError("Please Enter Last Name");
-        } /*else if (TextUtils.isEmpty(et_phoneNumber.getText().toString().trim())) {
-            is_Valid = false;
-            et_phoneNumber.setError("Please Enter Phone Number");
-        } else if (et_phoneNumber.getText().toString().trim().length() < 10) {
-            is_Valid = false;
-            et_phoneNumber.setError("Please Enter Valid Phone Number");
-        } */else if (TextUtils.isEmpty(et_Email.getText().toString().trim())) {
+        } else if (TextUtils.isEmpty(et_Email.getText().toString().trim())) {
             is_Valid = false;
             et_Email.setError("Please Enter Email");
         } else if (!myUtils.emailValidator(et_Email.getText().toString().trim())) {
@@ -199,8 +172,8 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(city)) {
             is_Valid = false;
             Toast.makeText(this, "Please Select Your City", Toast.LENGTH_LONG).show();
-        }else if (city.matches("Select City")){
-            is_Valid=false;
+        } else if (city.matches("Select City")) {
+            is_Valid = false;
             Toast.makeText(this, "Please Select Your City", Toast.LENGTH_LONG).show();
         } else if (TextUtils.isEmpty(is_Type)) {
             is_Valid = false;
@@ -265,12 +238,19 @@ public class ProfileActivity extends AppCompatActivity {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 image_profile.setImageBitmap(bitmap);
+                image = filePath.getPath();
+                /*
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                Context context = getApplicationContext();
+                String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Profile Image", null);
+                image = path;
+*/
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+/*                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
                 byte[] bArray = bos.toByteArray();
-                image = bArray.toString();
-
+                image = bArray.toString();*/
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -278,8 +258,23 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+  /*  public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+*/
+
     public String getFileExtension(Uri uri) {
-        Context context= getApplicationContext();
+        Context context = getApplicationContext();
         ContentResolver cR = context.getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
@@ -364,7 +359,7 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 progressDialog.dismiss();
             }
-        }    else{
+        } else {
             Toast.makeText(this, "Connect the Internet and Try again", Toast.LENGTH_LONG).show();
         }
 

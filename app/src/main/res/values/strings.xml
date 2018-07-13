@@ -99,6 +99,7 @@
     <string name="title_activity_provider_home">ProviderHomeActivity</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="fcf_Preference" >fcf_Preference</string>
 
 
 </resources>
