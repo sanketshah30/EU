@@ -1,19 +1,25 @@
 package com.example.hp.eu.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +36,7 @@ import com.example.hp.eu.common.MyUtils;
 import com.example.hp.eu.controllers.UserController;
 import com.example.hp.eu.controllers.UserProfileController;
 import com.example.hp.eu.model.DBHelperModel;
+import com.example.hp.eu.model.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -39,14 +46,22 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
 
     //constant to track image chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int MEDIA_TYPE_IMAGE = 1;
+    private static final String IMAGE_DIRECTORY_NAME = "eu";
+    public static Uri fileUri;
+    public static final int PICK_PHOTO = 1001;
+    public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 1002;
+    public static final int CAMERA_PERMISSION_CODE = 101;
+    public static final int CAMERA_GALLARY_CODE = 102;
     private EditText et_fname, et_lname, et_phoneNumber, et_password, et_address, et_Email, et_ConfirmPassword, et_income;
     private ImageView image_profile;
     private boolean checkIncome = false;
@@ -99,11 +114,12 @@ public class ProfileActivity extends AppCompatActivity {
         image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                /*Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                */openGallery(ProfileActivity.this);
+                /*intent.setAction(Intent.ACTION_GET_CONTENT);//
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-            }
+            */}
         });
 
 //        getData();
@@ -229,21 +245,129 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                image_profile.setImageBitmap(bitmap);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void openGallery(Activity context) {
+        try {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_GALLARY_CODE);
+                } else {
+                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_GALLARY_CODE);
+                }
+            } else {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                intent.putExtra("return-data", true);
+                context.startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
+        } catch (Exception e) {
+            Log.e(this.getClass().getName(), "openGallery " + e.getMessage());
         }
     }
+
+   /* public void openCamera(Activity context) {
+        try {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
+                } else {
+                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
+                }
+            } else {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_IMAGE);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                context.startActivityForResult(cameraIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            }
+        } catch (Exception e) {
+            Log.e(this.getClass().getName(), "openCamera " + e.getMessage());
+        }
+    }*/
+
+    public Uri getOutputMediaFileUri(Context context, int type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", getOutputMediaFile(type));
+        } else
+            return Uri.fromFile(getOutputMediaFile(type));
+
+    }
+
+    private static File getOutputMediaFile(int type) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.e(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
+                        + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (requestCode == CAMERA_GALLARY_CODE) {
+                if (grantResults.length == 1
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openGallery(this);
+                } else
+                    Toast.makeText(this, "System does not have permission. Check your permissions", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
+
+    /*
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+                filePath = data.getData();
+                try {
+
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(MyApplication.byteArray, 0, MyApplication.byteArray.length);
+                    image_profile.setImageBitmap(bitmap);
+
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+            } else if (requestCode == 101 && resultCode == RESULT_OK) {
+                if (MyApplication.byteArray != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(MyApplication.byteArray, 0, MyApplication.byteArray.length);
+                    image_profile.setImageBitmap(bitmap);
+                    MyApplication.byteArray = null;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(this.getClass().getName(), "onActivityResult " + e.getMessage());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+*/
+
 
 
 
@@ -283,8 +407,11 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                                 if (is_Type == "Receiver") {
+                                    UserModel userModel= new UserModel();
 
 
+
+/*
                                     UserProfileController insertData = new UserProfileController();
                                     insertData.insertUserProfile(ProfileActivity.this, "1", "1", gender + " " + et_fname.getText().toString(), et_lname.getText().toString(),
                                             et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
@@ -292,6 +419,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     UserController insertData1 = new UserController();
                                     insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, filePath.toString(), et_address.getText().toString()
                                             , city, et_income.getText().toString(), "1", "1");
+*/
                                     Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsReceiverActivity.class);
                                     intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());
                                     intent_Kid_Provider.putExtra("USER_TYPE", is_Type);
@@ -304,8 +432,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
 
                                     UserController insertData1 = new UserController();
-                                    insertData1.insertUser(ProfileActivity.this, "1", "1", is_Type, filePath.toString(), et_address.getText().toString()
-                                            , city, et_income.getText().toString(), "1", "1");
+                                    insertData1.insertUser(ProfileActivity.this,null);
 
                                     Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsProviderActivity.class);
                                     intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());

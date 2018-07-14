@@ -21,6 +21,7 @@ public class MyApplication extends Application {
     public static String booking_ID = "";
     private RequestQueue mRequestQueue;
     public static String measurement_Type = "";
+    public static byte[] byteArray = null;
 
     public static synchronized MyApplication getInstance() {
         Log.e("mInstance", "==" + mInstance);

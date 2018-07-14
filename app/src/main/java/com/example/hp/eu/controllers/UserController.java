@@ -23,19 +23,18 @@ import java.util.Map;
 import static com.example.hp.eu.common.Constants.*;
 
 public class UserController {
-    public static void insertUser(Context context, String id, String user_id, String user_type, String user_profile_image, String address,
-                                  String city, String income, String is_delete, String is_active) {
+    public static void insertUser(Context context, UserModel userModel) {
         try {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_ID, id);
-            values.put(COLUMN_USER_ID, user_id);
-            values.put(COLUMN_USER_TYPE, user_type);
-            values.put(COLUMN_USER_PROFILE_IMAGE, user_profile_image);
-            values.put(COLUMN_ADDRESS, address);
-            values.put(COLUMN_CITY, city);
-            values.put(COLUMN_INCOME, income);
+            values.put(COLUMN_ID, userModel.getId());
+            values.put(COLUMN_USER_ID, userModel.getUser_id());
+            values.put(COLUMN_USER_TYPE, userModel.getRequestor_provider());
+            values.put(COLUMN_USER_PROFILE_IMAGE, userModel.getProfile_image());
+            values.put(COLUMN_ADDRESS, userModel.getAddress());
+            values.put(COLUMN_CITY, userModel.getCity());
+            values.put(COLUMN_INCOME, userModel.getIncome());/*
             values.put(COLUMN_IS_DELETE, is_delete);
-            values.put(COLUMN_IS_ACTIVE, is_active);
+            values.put(COLUMN_IS_ACTIVE, is_active);*/
 
             context.getContentResolver().insert(CONTENT_USER, values);
 
@@ -90,7 +89,6 @@ public class UserController {
                 SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.fcf_Preference), Context.MODE_PRIVATE);
                 params.put("mobile_number", mobile_number);
                 params.put("fcm_id", MyApplication.setting.getString("UUID", ""));
-
                 Log.e("paramsssslloign", "===" + params.toString());
 
                 return params;
