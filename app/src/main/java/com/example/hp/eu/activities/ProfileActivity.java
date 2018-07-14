@@ -7,12 +7,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -47,6 +49,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -54,8 +57,8 @@ import java.util.Locale;
 public class ProfileActivity extends AppCompatActivity {
 
     //constant to track image chooser intent
-    private static final int PICK_IMAGE_REQUEST = 234;
-    private static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int MEDIA_TYPE_IMAGE = 2;
     private static final String IMAGE_DIRECTORY_NAME = "eu";
     public static Uri fileUri;
     public static final int PICK_PHOTO = 1001;
@@ -114,12 +117,8 @@ public class ProfileActivity extends AppCompatActivity {
         image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-                */openGallery(ProfileActivity.this);
-                /*intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-            */}
+                openGallery(ProfileActivity.this);
+            }
         });
 
 //        getData();
@@ -196,7 +195,7 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Please Select User Type", Toast.LENGTH_LONG).show();
         } else if (filePath == null) {
             Toast.makeText(this, "Please Enter image", Toast.LENGTH_SHORT).show();
-        }        else if (checkIncome) {
+        } else if (checkIncome) {
 
             if (TextUtils.isEmpty(et_income.getText().toString().trim())) {
                 is_Valid = false;
@@ -264,26 +263,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-   /* public void openCamera(Activity context) {
-        try {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
-                } else {
-                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
-                }
-            } else {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                fileUri = getOutputMediaFileUri(context, MEDIA_TYPE_IMAGE);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-                context.startActivityForResult(cameraIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-            }
-        } catch (Exception e) {
-            Log.e(this.getClass().getName(), "openCamera " + e.getMessage());
-        }
-    }*/
 
     public Uri getOutputMediaFileUri(Context context, int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -339,36 +318,53 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    /*
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                // Log.d(TAG, String.valueOf(bitmap));
+                image_profile.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+/*    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
                 filePath = data.getData();
+
                 try {
-
+                    *//*
+                    if (MyApplication.byteArray != null) {
+                        *//*
                     Bitmap bitmap = BitmapFactory.decodeByteArray(MyApplication.byteArray, 0, MyApplication.byteArray.length);
-                    image_profile.setImageBitmap(bitmap);
+                    ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+                    MyApplication.byteArray = bStream.toByteArray();
 
+                    image_profile.setImageBitmap(bitmap);
+                        *//*MyApplication.byteArray = null;
+                    }*//*
                 } catch (Exception e) {
                     e.getMessage();
                 }
-            } else if (requestCode == 101 && resultCode == RESULT_OK) {
-                if (MyApplication.byteArray != null) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(MyApplication.byteArray, 0, MyApplication.byteArray.length);
-                    image_profile.setImageBitmap(bitmap);
-                    MyApplication.byteArray = null;
-                }
-            }
+            }*//* else if (requestCode == 101 && resultCode == RESULT_OK) {
+
+
+            }*//*
         } catch (Exception e) {
             Log.e(this.getClass().getName(), "onActivityResult " + e.getMessage());
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-*/
 
-
+    }*/
 
 
     public String getFileExtension(Uri uri) {
@@ -407,7 +403,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                                 if (is_Type == "Receiver") {
-                                    UserModel userModel= new UserModel();
+                                    UserModel userModel = new UserModel();
 
 
 
@@ -432,7 +428,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             et_phoneNumber.getText().toString(), et_Email.getText().toString(), et_password.getText().toString(), "0", "1");
 
                                     UserController insertData1 = new UserController();
-                                    insertData1.insertUser(ProfileActivity.this,null);
+                                    insertData1.insertUser(ProfileActivity.this, null);
 
                                     Intent intent_Kid_Provider = new Intent(ProfileActivity.this, KidDetailsProviderActivity.class);
                                     intent_Kid_Provider.putExtra("MOBILE_NUMBER", et_phoneNumber.getText().toString().trim());

@@ -18,9 +18,7 @@ public class MyApplication extends Application {
     public static final String TAG = MyApplication.class.getSimpleName();
     public static SharedPreferences setting;
     private static MyApplication mInstance;
-    public static String booking_ID = "";
     private RequestQueue mRequestQueue;
-    public static String measurement_Type = "";
     public static byte[] byteArray = null;
 
     public static synchronized MyApplication getInstance() {
@@ -38,7 +36,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        setting = getSharedPreferences("com.raymond.stylist", MODE_PRIVATE);
+        setting = getSharedPreferences("com.example.hp.eu", MODE_PRIVATE);
         Log.e("initializeApp", "==" + FirebaseApp.initializeApp(getApplicationContext()));
 // FirebaseApp.initializeApp(getApplicationContext());
 
