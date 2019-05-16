@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="A-Z"
+                android:text="Z-A"
                 android:textAlignment="center" />
 
 
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:text="A-Z"
+                android:text="Custom"
                 android:textAlignment="center" />
         </LinearLayout>
 
