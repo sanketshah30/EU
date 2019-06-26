@@ -7,7 +7,7 @@
     android:layout_marginBottom="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="@drawable/borde"
+    android:background="@drawable/border"
     android:orientation="vertical">
 
     <LinearLayout
@@ -26,18 +26,10 @@
             android:layout_marginTop="10dp"
             android:paddingTop="15dp">
 
-            <com.example.hp.eu.custom.CircularImageView
-                android:id="@+id/imageview_profile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/background" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/imageview_profile"
+                android:layout_toLeftOf="@id/imageview_profile"
                 android:orientation="vertical">
 
                 <TextView
@@ -58,6 +50,14 @@
                     android:textColor="@android:color/black" />
 
             </LinearLayout>
+            <com.example.hp.eu.custom.CircularImageView
+                android:id="@+id/imageview_profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/background" />
+
 
             <com.example.hp.eu.custom.TextViewUbuntuRegular
                 android:id="@+id/tv_details"
